@@ -4,7 +4,7 @@ local VERSION = 1
 local entries = {}
 
 if CompatHelper then
-    if CompatHelper.Version > VERSION then
+    if CompatHelper.VERSION > VERSION then
         return
     end
 
