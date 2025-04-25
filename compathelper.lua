@@ -33,12 +33,14 @@ function CompatHelper:Register(global, fn)
     CompatHelper.Entries[global] = fn
 end
 
+function CompatHelper:Init()
+    if Isaac.GetFrameCount() > 0 then
+        CompatHelper:Load()
+    end
+end
+
 if REPENTOGON then
     CompatHelper:AddCallback(ModCallbacks.MC_POST_MODS_LOADED, CompatHelper.Load)
 else
     CompatHelper:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, CompatHelper.Load)
-end
-
-if Isaac.GetFrameCount() > 0 then
-    CompatHelper:Load()
 end
