@@ -1,4 +1,4 @@
-local VERSION = 1
+local VERSION = 1.1
 
 ---@type table<string, function>
 local entries = {}
@@ -22,21 +22,33 @@ CompatHelper.VERSION = VERSION
 CompatHelper.Entries = entries
 
 function CompatHelper:Load()
-    for k, v in pairs(CompatHelper.Entries) do
-        if _G[k] then
-            v()
+    for _, v in ipairs(CompatHelper.Entries) do
+        if _G[v[1]] then
+            v[2]()
         end
     end
 end
 
-function CompatHelper:Register(global, fn)
-    CompatHelper.Entries[global] = fn
+function CompatHelper:Register(mod, global, fn)
+    CompatHelper.Entries[#CompatHelper.Entries + 1] = {global, fn, mod}
 end
 
 function CompatHelper:Init()
     if Isaac.GetFrameCount() > 0 then
         CompatHelper:Load()
     end
+end
+
+function CompatHelper:Clear(mod)
+    local copy = {}
+
+    for _, v in ipairs(CompatHelper.Entries) do
+        if v[3].Name ~= mod.Name then
+            copy[#copy + 1] = v
+        end
+    end
+
+    CompatHelper.Entries = copy
 end
 
 if REPENTOGON then
